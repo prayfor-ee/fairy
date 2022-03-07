@@ -2,3 +2,4 @@ venv/
 .idea/
 apikey.py
 .DS_Store
+__pycache__/
