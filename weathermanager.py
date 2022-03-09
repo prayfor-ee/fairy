@@ -43,7 +43,7 @@ class WeatherManager:
 		#params ={"serviceKey" : "서비스키", "pageNo" : "1", "numOfRows" : "1000", "dataType" : "XML", "base_date" : "20210628", "base_time" : "0500", "nx" : "55", "ny" : "127" }
 		params = {"ServiceKey" : API_KEY.DATA_GO_DECODING_KEY, 
 		"pageNo" : "1", 
-		"numOfRows" : "12", #Total 12 / 
+		"numOfRows" : "500", #when numOfRows is about 500, i can get TMN and TMX.
 		"dataType" : "json", 
 		"base_date" : base_date, 
 		"base_time" : base_time, 
@@ -107,15 +107,48 @@ class WeatherManager:
 		common_utils = C.CommonUtils()
 		item = common_utils.get_jsonvalue(source, "item")
 		C.P(f"type [{type(item)}, item [{item}]")
+
+		settingvalue = 0
+		#infolist = ["TMP","UUU","VVV","VEC","WSD","SKY","PTY","POP","WAV","PCP","REH","SNO","TMN","TMX"]
+		infodict = {"TMP" : False, 
+						"UUU" : False,
+						"VVV" : False,
+						"VEC" : False,
+						"WSD" : False,
+						"SKY" : False,
+						"PTY" : False,
+						"POP" : False,
+						"WAV" : False,
+						"PCP" : False,
+						"REH" : False,
+						"SNO" : False,
+						"TMN" : False,
+						"TMX" : False}
+
+				#for key, value in match_dict.items():
+    			#	print(key, ":", value)
+		weatherInfo = {}
 		for data in item:
 			if "category" in data:
 				#C.P(f"data [{data["category"]}]")
+				category = data["category"]
+				if infodict[category] == True :	#There is no(?) need to check again about the information that has already been set.
+					continue
+				
 				if "fcstValue" in data:
-					categoryStr = self.category_to_str(data["category"])
-					fcstValue = self.fcstvalue_to_str(data["category"], data["fcstValue"])
-					C.P(f"data [{categoryStr} : {fcstValue}]")
+					fcstValue = data["fcstValue"]
+					categoryStr = self.category_to_str(category)
+					fcstInfo = self.fcstvalue_to_info(category, fcstValue)
+					C.P(f"data [{categoryStr} : {fcstInfo}]")
+					weatherInfo[categoryStr] = fcstInfo
+					infodict[category] = True	# completed setting = true
+					settingvalue = settingvalue + 1
+
+			if len(infodict) == settingvalue:	# completed setting all the information.
+				break
 					
 		del common_utils
+		return weatherInfo
 
 	def category_to_str(self, category):
 #TMP : 1시간 온도
@@ -124,11 +157,7 @@ class WeatherManager:
 #VEC: 풍향
 #WSD: 풍속
 #SKY: 하늘상태
-#- 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
 #PTY: 강수형태
-#- 강수형태(PTY) 코드 : (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7) 
-#                      (단기) 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4) 
-#- 초단기예보, 단기예보 강수량(RN1, PCP) 범주 및 표시방법(값)
 #POP: 강수확률
 #WAV: 파고
 #PCP: 1시간 강수량
@@ -151,13 +180,11 @@ class WeatherManager:
 						"TMN" : "일최저기온",
 						"TMX" : "일최고기온"}
 		if category in match_dict:
-			#if category == "TMN" or category == "TMX":	#not exist response_info, so i check it...
-			#	C.P("=========================================")
 			return match_dict[category]
 
 			
 			
-	def fcstvalue_to_str(self, category, fcstvalue):
+	def fcstvalue_to_info(self, category, fcstvalue):
 #SKY: 하늘상태
 #- 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
 #PTY: 강수형태
