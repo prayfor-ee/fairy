@@ -15,7 +15,15 @@ class DataManager:
 	def __init__(self):
 		pass
 
+	def get_location(self, text):
+		#load excel or numbers file
+		#find text
+		#get nx ny 
+		
+		pass
+
 	def request_weather(self):
+		common_utils = C.CommonUtils()
 		#단기예보
 		request_url = REQUEST_URL.DATA_GO_VILAGE_FCST
 
@@ -29,9 +37,9 @@ class DataManager:
 		nx = "62"
 		ny = "123"
 		
-		params = {'serviceKey' : API_KEY.DATA_GO_DECODING_KEY, 
-		#'pageNo' : '50', 
-		#'numOfRows' : '12', #Total 12 / 
+		params = {'ServiceKey' : API_KEY.DATA_GO_DECODING_KEY, 
+		'pageNo' : '1', 
+		'numOfRows' : '12', #Total 12 / 
 		'dataType' : 'json', 
 		'base_date' : base_date, 
 		'base_time' : base_time, 
@@ -43,11 +51,14 @@ class DataManager:
 		if res.status_code == 200 :#normal
 			C.P(f"res.status_code [{res.status_code}]")
 			#C.P(f"res.content [{res.content}]")
-			items = res.json().get('response').get('body').get('items')
+			jsonkeylist = ['response', 'body', 'items']
+			items = common_utils.get_jsonvalue(res.json(), jsonkeylist)
+			#items = res.json().get('response').get('body').get('items')
 			C.P(f"items [{items}]")
 		else:
 			C.P("error! because ")#, res.json())
 
+		del common_utils
 		#C.P(f"res.content [{res.content}]")
 
 #params ={'serviceKey' : '서비스키', 'pageNo' : '1', 'numOfRows' : '1000', 'dataType' : 'XML', 'base_date' : '20210628', 'base_time' : '0500', 'nx' : '55', 'ny' : '127' }

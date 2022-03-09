@@ -13,3 +13,5 @@ if __name__ == '__main__':
     data_manager.request_weather()
 
     C.P('end')
+    del data_manager
+    del stt_manager
