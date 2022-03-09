@@ -1,9 +1,15 @@
 import json
+import datetime
 
 P = print
 
 class CommonUtils:
 	
+	def get_current_time(self, formatted = '%Y%m%d%H%M%S'):
+		now = datetime.datetime.now()
+		nowDate = now.strftime(formatted)
+		return nowDate
+		
 	def get_jsonvalue(self, jsonobject, key):
 		
 		if type(key) == str:

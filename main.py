@@ -1,6 +1,6 @@
 import common as C
 import sttmanager as STT
-import datamanager as DATA
+import weathermanager as Weather
 if __name__ == '__main__':
     C.P('start')
 
@@ -9,7 +9,7 @@ if __name__ == '__main__':
     #text = stt_manager.request_kakao(audio)
     #C.P(f"text [{text}]")
 
-    data_manager = DATA.DataManager()
+    data_manager = Weather.WeatherManager()
     data_manager.request_weather()
 
     C.P('end')
