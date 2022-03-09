@@ -12,6 +12,14 @@ class STTManager:
         pass
 
     def request_kakao(self, audio):
+        """request kakao server (Speech to Text)
+
+        Args:
+            audio (bytes): speech data (raw_data(bytes) of voicerecognition)
+
+        Returns:
+            str, list: text from stt, nbest list of voicerecognition
+        """
         text = ""
         nbestlist = []
 
@@ -59,6 +67,8 @@ class STTManager:
         return text, nbestlist
 
     def get_voice_recognition(self):
+        """get raw_data(bytes) of voicerecognition
+        """
         # 음성 데이터는 Mono channel, 16000 Hz samplerate, 16 bit depth인 RAW PCM 포맷만 지원합니다.
         recognizer = SR.Recognizer()    #speech
         microphone = SR.Microphone(sample_rate=16000) #set mic

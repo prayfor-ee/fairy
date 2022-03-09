@@ -23,6 +23,8 @@ class WeatherManager:
 		pass
 
 	def request_weather(self):
+		"""request weather server (data.go.kr)
+		"""
 		common_utils = C.CommonUtils()
 		#단기예보
 		requestUrl = REQUEST_URL.DATA_GO_VILAGE_FCST
@@ -67,6 +69,14 @@ class WeatherManager:
 		#C.P(f"res.content [{res.content}]")
 
 	def get_basetime(self, currenttime):
+		"""get the basetime according to the server's reference time.
+
+		Args:
+			currenttime (str): current time
+
+		Returns:
+			str: basetime of server
+		"""
 		time = 0
 		if type(currenttime) != int:
 			try:
@@ -103,6 +113,14 @@ class WeatherManager:
 		return base_time
 
 	def get_weather_info(self, source):
+		"""get weather information from server data.
+
+		Args:
+			source (jsonObject): in, jsonObject about weather infomation
+
+		Returns:
+			dict: weather infomation
+		"""
 		#source = {"item": [{"baseDate": "20220309", "baseTime": "0500", "category": "TMP", "fcstDate": "20220309", "fcstTime": "0600", "fcstValue": "1", "nx": 62, "ny": 123}, {"baseDate": ...
 		common_utils = C.CommonUtils()
 		item = common_utils.get_jsonvalue(source, "item")
@@ -151,20 +169,14 @@ class WeatherManager:
 		return weatherInfo
 
 	def category_to_str(self, category):
-#TMP : 1시간 온도
-#UUU : 풍속(동서성분)
-#VVV: 풍속(남북성분)
-#VEC: 풍향
-#WSD: 풍속
-#SKY: 하늘상태
-#PTY: 강수형태
-#POP: 강수확률
-#WAV: 파고
-#PCP: 1시간 강수량
-#REH: 습도
-#SNO: 1시간 신적설
-#TMN: 일 최저기온
-#TMX: 일 최고기온
+		"""change "standard word of category" to "easy word of category"
+
+		Args:
+			category (str): standard word of category
+
+		Returns:
+			str: easy word of category
+		"""
 		match_dict = {"TMP" : "1시간온도", 
 						"UUU" : "풍속(동서성분)",
 						"VVV" : "풍속(남북성분)",
@@ -185,6 +197,15 @@ class WeatherManager:
 			
 			
 	def fcstvalue_to_info(self, category, fcstvalue):
+		"""change "standard word of fcstvalue" to "easy word of fcstvalue"
+
+		Args:
+			category (str): standard word of category
+			fcstvalue (str): standard word of fcstvalue
+
+		Returns:
+			_type_: easy word of fcstvalue
+		"""
 #SKY: 하늘상태
 #- 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
 #PTY: 강수형태
