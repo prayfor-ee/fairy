@@ -37,14 +37,14 @@ class STTManager:
             end_position_for_split = res.text.rindex('}')+1
             res_result = res.text[start_position_for_split:end_position_for_split]
             #C.P(f"result : {res_result}")
-            text = json.loads(res_result).get('value')
+            text = json.loads(res_result).get("value")
             C.P(f"text : {text}")
-            nbest = json.loads(res_result).get('nBest')
+            nbest = json.loads(res_result).get("nBest")
             #C.P(f"nbest list : {nbest}")
-            data = sorted(nbest, reverse = True, key=(lambda nbest: nbest['score']))
+            data = sorted(nbest, reverse = True, key=(lambda nbest: nbest["score"]))
             for d in data:
                 #C.P(f"d [{d}]")
-                nbestlist.append(d['value'])
+                nbestlist.append(d["value"])
 
             #debug
             #for n in nbestlist:
@@ -52,7 +52,7 @@ class STTManager:
 
             #C.P("result : ", res.text[res.text.index('{"type":"finalResult"'):res.text.rindex('}')+1])
             #result = res.text[res.text.index('{"type":"finalResult"'):res.text.rindex('}') + 1]
-            #text = json.loads(result).get('value')
+            #text = json.loads(result).get("value")
         else:   # != 200 error
             C.P("error! because ")#, res.json())
 
